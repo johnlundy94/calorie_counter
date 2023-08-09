@@ -1,0 +1,25 @@
+import React, { useReducer } from 'react';
+import "./App.css";
+import Home from "./pages/Home";
+import CalorieCounter from "./pages/CalorieCounter";
+import Questions from "./pages/Questions";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { UserContext, initialUserState, userReducer } from './context/userContext';
+
+function App() {
+  const [userState, userDispatch] = useReducer(userReducer, initialUserState);
+
+  return (
+    <UserContext.Provider value={{ userState, userDispatch }}>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/calorie-counter" element={<CalorieCounter />} />
+          <Route path="/questions" element={<Questions />} />
+        </Routes>
+      </Router>
+    </UserContext.Provider>
+  );
+}
+
+export default App;
