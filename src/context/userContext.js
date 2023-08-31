@@ -1,8 +1,10 @@
 import { createContext } from 'react';
 
 export const UserContext = createContext();
+export const FirebaseContext = createContext();
 
 export const initialUserState = {
+  uid: '',
   sex: '',
   height: 0,
   weight: 0,
