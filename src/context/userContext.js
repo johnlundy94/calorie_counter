@@ -32,7 +32,9 @@ export const userReducer = (state, action) => {
     case 'ADD_MEAL':
       return { ...state, meals: [...state.meals, action.payload] };
     case 'SET_TDEE':
-      return { ...state, tdee: action.payload}
+      return { ...state, tdee: action.payload};
+    case 'SET_UID':
+      return {...state, uid: action.payload};
     default:
       return state;
   }

@@ -7,6 +7,7 @@ import CalorieCounter from "./pages/CalorieCounter";
 import Questions from "./pages/Questions";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserContext, initialUserState, userReducer } from './context/userContext';
+import db from './config/firebase';
 
 function App() {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
