@@ -1,6 +1,10 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
+import {doc, updateDoc} from 'firebase/firestore'
+import firebaseConfig from '../config/firebase';
+
+const { db } = firebaseConfig;
 
 const Questions = () => {
   const navigate = useNavigate();
@@ -13,7 +17,7 @@ const Questions = () => {
   const [exerciseDays, setExerciseDays] = useState(0);
   const [age, setAge] = useState(0);
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const heightInCm = (feet * 30.48) + (inches * 2.54);
 
@@ -28,6 +32,10 @@ const Questions = () => {
     userDispatch({ type: 'SET_AGE', payload: age });
     userDispatch({ type: 'SET_TDEE', payload: tdee });
 
+    const userDoc = doc(db, "users", userState.uid);
+    await updateDoc(userDoc, {
+      tdee: tdee,
+    })
     navigate('/calorie-counter');
   };
 

@@ -1,11 +1,14 @@
 import React, { useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import firebaseConfig from '../../config/firebase';
 import { UserContext } from '../../context/userContext';
+import {doc, setDoc} from "firebase/firestore";
 
-const { auth } = firebaseConfig;
+const { db, auth } = firebaseConfig;
 
 const SignUp = () => {
+  const navigate = useNavigate();
   const {userDispatch} = useContext(UserContext)
 
   const handleSubmit = async (e) => {
@@ -13,12 +16,14 @@ const SignUp = () => {
     const email = e.target.email.value;
     const password = e.target.password.value;
 
-    console.log("Email:", email);
-    console.log("Password:", password);
     try {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
 
       const user = userCredential.user;
+
+      await setDoc(doc(db, "users", user.uid), {
+        tdee: 0,
+      })
 
       userDispatch({
         type: 'SET_UID',
@@ -26,7 +31,7 @@ const SignUp = () => {
       });
 
       console.log('Account created:', user);
-      window.alert('Account created:', user)
+      navigate('/questions')
     } catch (error) {
       console.error('Error in signup:', error);
       window.alert('Error in signup:', error)
