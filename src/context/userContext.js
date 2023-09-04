@@ -1,15 +1,15 @@
-import { createContext } from 'react';
+import { createContext } from "react";
 
 export const UserContext = createContext();
 export const FirebaseContext = createContext();
 
 export const initialUserState = {
-  uid: '',
-  sex: '',
+  uid: "",
+  sex: "",
   height: 0,
   weight: 0,
-  exercise: '',
-  goal: '',
+  exercise: "",
+  goal: "",
   meals: [],
   age: 0,
   tdee: 0,
@@ -17,24 +17,26 @@ export const initialUserState = {
 
 export const userReducer = (state, action) => {
   switch (action.type) {
-    case 'SET_SEX':
+    case "SET_SEX":
       return { ...state, sex: action.payload };
-    case 'SET_HEIGHT':
+    case "SET_HEIGHT":
       return { ...state, height: action.payload };
-    case 'SET_WEIGHT':
+    case "SET_WEIGHT":
       return { ...state, weight: action.payload };
-    case 'SET_EXERCISE':
+    case "SET_EXERCISE":
       return { ...state, exercise: action.payload };
-    case 'SET_GOAL':
+    case "SET_GOAL":
       return { ...state, goal: action.payload };
-    case 'SET_AGE':
+    case "SET_AGE":
       return { ...state, age: action.payload };
-    case 'ADD_MEAL':
+    case "ADD_MEAL":
       return { ...state, meals: [...state.meals, action.payload] };
-    case 'SET_TDEE':
-      return { ...state, tdee: action.payload};
-    case 'SET_UID':
-      return {...state, uid: action.payload};
+    case "SET_TDEE":
+      return { ...state, tdee: action.payload };
+    case "SET_UID":
+      return { ...state, uid: action.payload };
+    case "SET_USER_DATA":
+      return { ...state, ...action.payload };
     default:
       return state;
   }
