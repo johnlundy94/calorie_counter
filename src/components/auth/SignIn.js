@@ -34,7 +34,7 @@ const SignIn = () => {
       }
 
       userDispatch({
-        type: 'Set_UID',
+        type: 'SET_UID',
         payload: user.uid,
       });
 

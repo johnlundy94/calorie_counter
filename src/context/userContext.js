@@ -37,6 +37,8 @@ export const userReducer = (state, action) => {
       return { ...state, uid: action.payload };
     case "SET_USER_DATA":
       return { ...state, ...action.payload };
+      case "LOGOUT":
+        return initialUserState;  
     default:
       return state;
   }
