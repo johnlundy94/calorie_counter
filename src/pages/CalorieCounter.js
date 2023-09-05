@@ -1,12 +1,33 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import Chart from 'chart.js/auto';
 import { UserContext } from '../context/userContext';
+import firebaseConfig from '../config/firebase';
+
+import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
+
+const { db } = firebaseConfig; 
 
 const CalorieCounter = () => {
-  const { userState } = useContext(UserContext);
-  const { tdee } = userState;
-  const [userCalories, setUserCalories] = useState([]); // Array to hold user calorie data
   const chartRef = useRef(null);
+  const { userState, userDispatch } = useContext(UserContext);
+  const { tdee, uid } = userState;
+  const [userCalories, setUserCalories] = useState([]);
+
+  useEffect(() => {
+    // Fetch user data from Firestore
+    const fetchData = async () => {
+      if (uid) {
+        const docRef = doc(db, "users", uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          const userData = docSnap.data();
+          setUserCalories(userData.dailyCalories || []);
+        }
+      }
+    };
+
+    fetchData();
+  }, [uid]);
 
   useEffect(() => {
     if (chartRef && chartRef.current) {
@@ -37,15 +58,21 @@ const CalorieCounter = () => {
       });
 
       return () => {
-        chartInstance.destroy(); // This will clean up the chart instance when the component is unmounted.
+        chartInstance.destroy();
       };
     }
   }, [userCalories, tdee]);
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
     const newCalories = parseInt(e.target.userCalories.value);
-    setUserCalories([...userCalories, newCalories]);
+    const updatedCalories = [...userCalories, newCalories];
+
+    // Update Firestore
+    const docRef = doc(db, "users", uid);
+    await setDoc(docRef, { dailyCalories: updatedCalories }, { merge: true });
+
+    setUserCalories(updatedCalories);
   };
 
   return (

@@ -13,6 +13,7 @@ export const initialUserState = {
   meals: [],
   age: 0,
   tdee: 0,
+  dailyCalories: [],
 };
 
 export const userReducer = (state, action) => {
@@ -37,8 +38,10 @@ export const userReducer = (state, action) => {
       return { ...state, uid: action.payload };
     case "SET_USER_DATA":
       return { ...state, ...action.payload };
-      case "LOGOUT":
-        return initialUserState;  
+    case "LOGOUT":
+      return initialUserState;
+    case "SET_DAILY_CALORIES":
+      return { ...state, dailyCalories: action.payload}; 
     default:
       return state;
   }
