@@ -10,8 +10,7 @@ const { db } = firebaseConfig;
 const CalorieCounter = () => {
   const chartRef = useRef(null);
   const { userState, userDispatch } = useContext(UserContext);
-  const { tdee, uid } = userState;
-  const [userCalories, setUserCalories] = useState([]);
+  const { tdee, uid, todayCalories } = userState;
 
   useEffect(() => {
     // Fetch user data from Firestore
@@ -21,7 +20,8 @@ const CalorieCounter = () => {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
           const userData = docSnap.data();
-          setUserCalories(userData.dailyCalories || []);
+          userDispatch({ type: "SET_TODAY_CALORIES", payload: userData.todayCalories || 0 });
+          userDispatch({ type: "SET_CALORIE_UPDATES", payload: userData.calorieUpdates || [] });
         }
       }
     };
@@ -29,50 +29,77 @@ const CalorieCounter = () => {
     fetchData();
   }, [uid]);
 
-  useEffect(() => {
-    if (chartRef && chartRef.current) {
-      const chartInstance = new Chart(chartRef.current, {
-        type: 'line',
-        data: {
-          labels: userCalories.map((_, index) => index),
-          datasets: [
-            {
-              label: 'TDEE',
-              data: Array(userCalories.length).fill(tdee),
-              borderColor: 'rgba(255, 0, 0, 1)',
-            },
-            {
-              label: 'User Calories',
-              data: userCalories,
-              borderColor: 'rgba(0, 0, 255, 1)',
-            },
-          ],
-        },
-        options: {
-          scales: {
-            y: {
-              beginAtZero: true,
+    // Reset daily calories at midnight
+    useEffect(() => {
+      const now = new Date();
+      const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+      const timer = setTimeout(() => {
+        userDispatch({ type: "SET_TODAY_CALORIES", payload: 0 });
+      }, midnight);
+  
+      return () => clearTimeout(timer);
+    }, [userDispatch]);
+
+    useEffect(() => {
+      if (chartRef && chartRef.current && userState.calorieUpdates) {
+        const calorieUpdatesLength = userState.calorieUpdates.length;
+    
+        const tdeeData = Array(calorieUpdatesLength).fill(tdee); 
+
+        const chartInstance = new Chart(chartRef.current, {
+          type: 'line',
+          data: {
+            labels: userState.calorieUpdates ?userState.calorieUpdates.map(update => update.time) : [],
+            datasets: [
+              {
+                label: 'TDEE',
+                data: tdeeData,
+                borderColor: 'rgba(255, 0, 0, 1)',
+              },
+              {
+                label: 'Today Calories',
+                data: userState.calorieUpdates ?userState.calorieUpdates.map(update => update.cumulativeCalories) : [],
+                borderColor: 'rgba(0, 0, 255, 1)',
+              },
+            ],
+          },
+          options: {
+            scales: {
+              y: {
+                beginAtZero: true,
+              },
             },
           },
-        },
-      });
-
-      return () => {
-        chartInstance.destroy();
-      };
-    }
-  }, [userCalories, tdee]);
+        });
+  
+        return () => {
+          chartInstance.destroy();
+        };
+      }
+    }, [todayCalories, tdee, userState.calorieUpdates]);
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const newCalories = parseInt(e.target.userCalories.value);
-    const updatedCalories = [...userCalories, newCalories];
+    const newCalories = parseInt(e.target.userCalories.value, 10);
 
-    // Update Firestore
+    if (isNaN(newCalories)) {
+      alert('Please enter a valid number');
+      return;
+    }
+
+    const updatedCalories = userState.todayCalories + newCalories;
+
+    const now = new Date();
+    const currentTime = `${now.getHours()}:${now.getMinutes()}`;
+
+    const newCalorieUpdates = [...userState.calorieUpdates, { time: currentTime, cumulativeCalories: updatedCalories}]
+
+    // Update Firestore and local state
     const docRef = doc(db, "users", uid);
-    await setDoc(docRef, { dailyCalories: updatedCalories }, { merge: true });
+    await setDoc(docRef, { todayCalories: updatedCalories, calorieUpdates: newCalorieUpdates }, { merge: true });
 
-    setUserCalories(updatedCalories);
+    userDispatch({ type: "SET_TODAY_CALORIES", payload: updatedCalories });
+    userDispatch({ type: "SET_CALORIE_UPDATES", payload: newCalorieUpdates });
   };
 
   return (
