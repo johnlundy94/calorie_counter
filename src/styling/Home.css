@@ -1,0 +1,55 @@
+.home-container {
+    background-image: url('../images/marble1.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    text-align: center;
+    color: #FAF3E0; /* Off-White */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #4B5D2A; /* Deep Olive */
+  }
+  
+  .home-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: #D4AF37; /* Metallic Gold */
+    font-weight: bold;
+  }
+  
+  .home-text {
+    font-size: 1.2rem;
+    color: #FAF3E0; /* Off-White */
+    margin-bottom: 1rem;
+  }
+  
+  .auth-buttons {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .button {
+    background-color: #5A3921; /* Rich Brown */
+    color: #D4AF37; /* Metallic Gold */
+    padding: 15px 30px;
+    margin: 10px;
+    border: 1px solid #D4AF37;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .button:hover {
+    background-color: #9E4624; /* Burnt Sienna */
+  }
+  
+  @media (max-width: 768px) {
+    .home-title {
+      font-size: 1.5rem;
+    }
+    .home-text {
+      font-size: 1rem;
+    }
+  }
+  

@@ -1,13 +1,18 @@
+import "../styling/Home.css"
 import React from 'react';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
-    <div className="hero">
-      <h2>Welcome to the Calorie Counter App</h2>
-      <p>Track your daily calories and reach your health goals!</p>
+    <div className="home-container">
+      <h2 className="home-title"> 
+        Welcome to the Calorie Counter App
+      </h2>
+      <p className="home-text"> 
+        Track your daily calories and reach your health goals!
+      </p>
       
-      <div className="auth-buttons">
+      <div className="auth-buttons container"> 
         <Link to="/signin" className="button">
           Sign In
         </Link>
