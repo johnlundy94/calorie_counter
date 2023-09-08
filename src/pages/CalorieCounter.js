@@ -87,7 +87,7 @@ const CalorieCounter = () => {
               borderColor: "rgba(255, 0, 0, 1)",
             },
             {
-              label: "Today Calories",
+              label: "Today's Calories",
               data: userState.calorieUpdates
                 ? userState.calorieUpdates.map(
                     (update) => update.cumulativeCalories
