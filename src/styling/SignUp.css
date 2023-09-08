@@ -39,3 +39,11 @@ form {
     background-color: #9E4624; 
   }
   
+  .invalid-input {
+    border: 2px solid red;
+  }
+  
+  .error-text {
+    color: red;
+    font-size: 0.8em;
+  }
