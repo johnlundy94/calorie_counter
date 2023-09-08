@@ -1,3 +1,4 @@
+import "../../styling/SignIn.css"
 import React, { useContext } from 'react';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { UserContext } from '../../context/userContext';

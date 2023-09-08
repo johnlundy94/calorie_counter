@@ -1,7 +1,9 @@
+import "../styling/CalorieCounter.css"
 import React, { useEffect, useRef, useState, useContext } from 'react';
 import Chart from 'chart.js/auto';
 import { UserContext } from '../context/userContext';
 import firebaseConfig from '../config/firebase';
+import Nav from "../components/Nav";
 
 import { doc, getDoc, setDoc } from "firebase/firestore"; // Import Firestore methods
 
@@ -103,15 +105,18 @@ const CalorieCounter = () => {
   };
 
   return (
-    <div>
-      <h2>Your Daily Calorie Intake</h2>
-      <p>Based on your information, you should consume approximately {Math.round(tdee)} calories per day.</p>
+    <div className="calorie-counter">
+      <Nav/>
+    <h2 className="calorie-title">Your Daily Calorie Intake</h2>
+    <p className="calorie-description">Based on your information, you should consume approximately {Math.round(tdee)} calories per day.</p>
+    <div className="calorie-chart">
       <canvas ref={chartRef} />
-      <form onSubmit={handleFormSubmit}>
-        <input name="userCalories" type="number" placeholder="Enter calories" />
-        <button type="submit">Update Calories</button>
-      </form>
     </div>
+    <form className="calorie-form" onSubmit={handleFormSubmit}>
+      <input className="calorie-input" name="userCalories" type="number" placeholder="Enter calories" />
+      <button className="calorie-button" type="submit">Update Calories</button>
+    </form>
+  </div>
   );
 };
 
