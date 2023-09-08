@@ -1,27 +1,28 @@
 .home-container {
-    background-image: url('../images/marble1.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    text-align: center;
-    color: #FAF3E0; /* Off-White */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #4B5D2A; /* Deep Olive */
-  }
-  
+  background-image: url('../images/marble1.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  text-align: center;
+  color: #FAF3E0; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  width: 100%; 
+  background-color: #4B5D2A; 
+}
   .home-title {
     font-size: 2rem;
     margin-bottom: 1rem;
-    color: #D4AF37; /* Metallic Gold */
+    color: #D4AF37; 
     font-weight: bold;
   }
   
   .home-text {
     font-size: 1.2rem;
-    color: #FAF3E0; /* Off-White */
+    color: #FAF3E0; 
     margin-bottom: 1rem;
   }
   
@@ -31,8 +32,8 @@
   }
   
   .button {
-    background-color: #5A3921; /* Rich Brown */
-    color: #D4AF37; /* Metallic Gold */
+    background-color: #5A3921; 
+    color: #D4AF37; 
     padding: 15px 30px;
     margin: 10px;
     border: 1px solid #D4AF37;
@@ -41,7 +42,7 @@
   }
   
   .button:hover {
-    background-color: #9E4624; /* Burnt Sienna */
+    background-color: #9E4624; 
   }
   
   @media (max-width: 768px) {

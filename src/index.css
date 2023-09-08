@@ -1,20 +1,20 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #4B5D2A; /* Deep Olive */
+  background-color: #4B5D2A; 
   font-family: 'Helvetica', sans-serif;
-  color: #2E2E2E; /* Slate Grey */
+  color: #2E2E2E; 
 }
 
 h1, h2, h3 {
   font-family: 'Times New Roman', serif;
   text-transform: uppercase;
-  color: #5A3921; /* Rich Brown */
+  color: #5A3921; 
 }
 
 .container {
-  background-color: #5A3921; /* Rich Brown */
-  color: #FAF3E0; /* Off-White */
+  background-color: #5A3921; 
+  color: #FAF3E0; 
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

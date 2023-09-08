@@ -1,3 +1,5 @@
+import "../styling/Questions.css"
+import Nav from '../components/Nav';
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../context/userContext';
@@ -66,9 +68,10 @@ const Questions = () => {
   };
 
   return (
-    <div>
-      <h2>Answer a few questions to get started:</h2>
-      <form onSubmit={handleFormSubmit}>
+    <div className="questions-container">
+      <Nav className="questions-nav"/>
+      <h2 className="questions-title">Answer a few questions to get started:</h2>
+      <form className="questions-form" onSubmit={handleFormSubmit}>
         <label>
           Gender:
           <select value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -116,7 +119,7 @@ const Questions = () => {
           </div>
         </label>
         <br />
-        <button type="submit" disabled={!gender || !feet || !inches || !weight || !age || !exerciseMinutes || !exerciseDays}>
+        <button className="questions-button" type="submit" disabled={!gender || !feet || !inches || !weight || !age || !exerciseMinutes || !exerciseDays}>
           Start Tracking
         </button>
       </form>

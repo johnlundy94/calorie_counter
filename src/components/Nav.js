@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { UserContext } from "../context/userContext";
+import "../styling/Nav.css"
 
 const Nav = () => {
   const { userState, userDispatch } = useContext(UserContext);
@@ -22,10 +23,10 @@ const Nav = () => {
   };
 
   return (
-    <div className="nav">
+    <div className="nav-container">
       {userState.uid ? (
         <>
-          <button onClick={handleLogOut}>Log Out</button>
+          <button className="nav-button" onClick={handleLogOut}>Log Out</button>
         </>
       ) : null}
     </div>

@@ -8,7 +8,6 @@ import Questions from "./pages/Questions";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { UserContext, initialUserState, userReducer } from './context/userContext';
 import db from './config/firebase';
-import Nav from './components/Nav';
 
 function App() {
   const [userState, userDispatch] = useReducer(userReducer, initialUserState);
@@ -17,7 +16,6 @@ function App() {
   return (
     <UserContext.Provider value={{ userState, userDispatch }}>
       <Router>
-        <Nav/>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/signin" element={<SignInPage/>} />
