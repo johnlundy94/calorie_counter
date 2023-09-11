@@ -39,14 +39,36 @@ const CalorieCounter = () => {
 
   // Reset daily calories at midnight
   useEffect(() => {
-    const now = new Date();
-    const midnight =
-      new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
-    const timer = setTimeout(() => {
+    // Function to reset the calories to 0
+    const resetCalories = () => {
       userDispatch({ type: "SET_TODAY_CALORIES", payload: 0 });
-    }, midnight);
+      // Also update this data in your Firestore database if needed
+    };
 
-    return () => clearTimeout(timer);
+    // Function to calculate time until the next midnight
+    const calculateTimeUntilMidnight = () => {
+      const now = new Date();
+      const midnight = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate() + 1
+      );
+      return midnight - now;
+    };
+
+    // Initial setTimeout to wait until the next midnight
+    const timer = setTimeout(() => {
+      resetCalories(); // Reset the calories at the next midnight
+      // Set an interval to reset the calories every 24 hours after that
+      setInterval(resetCalories, 24 * 60 * 60 * 1000); // 24 hours in milliseconds
+    }, calculateTimeUntilMidnight());
+
+    // Cleanup function
+    return () => {
+      clearTimeout(timer); // Clear the initial setTimeout
+      // You might also want to clear the setInterval if the component unmounts,
+      // but that's a bit more involved as you'd need to keep its ID.
+    };
   }, [userDispatch]);
 
   const formatTime = (timeInput) => {
