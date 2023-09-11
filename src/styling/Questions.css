@@ -1,46 +1,43 @@
 .questions-container {
-    background-image: url('../images/marble1.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    text-align: center;
-    color: #FAF3E0; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background-color: #4B5D2A; 
-  }
-  
-  .questions-title {
-    font-size: 2rem;
-    margin-bottom: 1rem;
-    color: #D4AF37; 
-    font-weight: bold;
-  }
-  
-  .questions-form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background-color: #5A3921; 
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .questions-button {
-    background-color: #D4AF37; 
-    color: #4B5D2A; 
-    padding: 15px 30px;
-    margin: 10px;
-    border: 1px solid #D4AF37;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-  }
-  
+  text-align: center;
+  color: #EAEAEA;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #1F1F1F;
+}
+
+.questions-title {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #FF5733;
+  font-weight: bold;
+  font-family: 'Roboto', sans-serif;
+  text-transform: uppercase;
+}
+
+.questions-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #333333;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.questions-button {
+  background-color: #FF5733;
+  color: #EAEAEA;
+  padding: 15px 30px;
+  margin: 10px;
+  border: 1px solid #FF5733;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
 
 @media only screen and (max-width: 768px) {
   .questions-container {
@@ -61,4 +58,3 @@
     font-size: 0.9rem;
   }
 }
-  

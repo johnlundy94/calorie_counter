@@ -1,20 +1,20 @@
 body {
   margin: 0;
   padding: 0;
-  background-color: #4B5D2A; 
-  font-family: 'Helvetica', sans-serif;
-  color: #2E2E2E; 
+  background-color: #1F1F1F;
+  font-family: 'Open Sans', sans-serif;
+  color: #EAEAEA;
 }
 
 h1, h2, h3 {
-  font-family: 'Times New Roman', serif;
+  font-family: 'Roboto', sans-serif;
   text-transform: uppercase;
-  color: #5A3921; 
+  color: #FFFFFF;
 }
 
 .container {
-  background-color: #5A3921; 
-  color: #FAF3E0; 
+  background-color: #333333;
+  color: #EAEAEA;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
