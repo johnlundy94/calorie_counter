@@ -48,6 +48,8 @@ export const userReducer = (state, action) => {
       return { ...state, calorieUpdates: action.payload };
     case "SET_DAILY_PROTEIN":
       return { ...state, dailyProtein: action.payload };
+    case "SET_PROTEIN_UPDATES":
+      return { ...state, proteinUpdates: action.payload };
     default:
       return state;
   }
