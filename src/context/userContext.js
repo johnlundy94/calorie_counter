@@ -15,6 +15,7 @@ export const initialUserState = {
   tdee: 0,
   todayCalories: 0,
   calorieUpdates: [],
+  dailyProtein: 0,
 };
 
 export const userReducer = (state, action) => {
@@ -42,9 +43,11 @@ export const userReducer = (state, action) => {
     case "LOGOUT":
       return initialUserState;
     case "SET_TODAY_CALORIES":
-      return { ...state, todayCalories: action.payload}; 
-      case "SET_CALORIE_UPDATES":
-        return { ...state, calorieUpdates: action.payload };
+      return { ...state, todayCalories: action.payload };
+    case "SET_CALORIE_UPDATES":
+      return { ...state, calorieUpdates: action.payload };
+    case "SET_DAILY_PROTEIN":
+      return { ...state, dailyProtein: action.payload };
     default:
       return state;
   }
