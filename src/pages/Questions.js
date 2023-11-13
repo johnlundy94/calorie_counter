@@ -1,17 +1,17 @@
-import "../styling/Questions.css"
-import Nav from '../components/Nav';
-import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { UserContext } from '../context/userContext';
-import {doc, updateDoc} from 'firebase/firestore'
-import firebaseConfig from '../config/firebase';
+import "../styling/Questions.css";
+import Nav from "../components/Nav";
+import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/userContext";
+import { doc, updateDoc } from "firebase/firestore";
+import firebaseConfig from "../config/firebase";
 
 const { db } = firebaseConfig;
 
 const Questions = () => {
   const navigate = useNavigate();
   const { userState, userDispatch } = useContext(UserContext);
-  const [gender, setGender] = useState('');
+  const [gender, setGender] = useState("");
   const [feet, setFeet] = useState(0);
   const [inches, setInches] = useState(0);
   const [weight, setWeight] = useState(0);
@@ -21,40 +21,67 @@ const Questions = () => {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    const heightInCm = (feet * 30.48) + (inches * 2.54);
+    const heightInCm = feet * 30.48 + inches * 2.54;
 
     const bmr = calculateBMR(gender, weight, heightInCm, age);
     const tdee = calculateTDEE(bmr, exerciseMinutes, exerciseDays);
+    const dailyProtein = calculateProtein(
+      weight,
+      exerciseMinutes,
+      exerciseDays
+    );
 
-    userDispatch({ type: 'SET_SEX', payload: gender });
-    userDispatch({ type: 'SET_HEIGHT', payload: heightInCm });
-    userDispatch({ type: 'SET_WEIGHT', payload: weight });
-    userDispatch({ type: 'SET_EXERCISE', payload: exerciseMinutes });
-    userDispatch({ type: 'SET_GOAL', payload: exerciseDays });
-    userDispatch({ type: 'SET_AGE', payload: age });
-    userDispatch({ type: 'SET_TDEE', payload: tdee });
+    userDispatch({ type: "SET_SEX", payload: gender });
+    userDispatch({ type: "SET_HEIGHT", payload: heightInCm });
+    userDispatch({ type: "SET_WEIGHT", payload: weight });
+    userDispatch({ type: "SET_EXERCISE", payload: exerciseMinutes });
+    userDispatch({ type: "SET_GOAL", payload: exerciseDays });
+    userDispatch({ type: "SET_AGE", payload: age });
+    userDispatch({ type: "SET_TDEE", payload: tdee });
+    userDispatch({ type: "SET_DAILY_PROTEIN", payload: dailyProtein });
 
     const userDoc = doc(db, "users", userState.uid);
     await updateDoc(userDoc, {
       tdee: tdee,
-    })
-    navigate('/calorie-counter');
+      dailyProtein: dailyProtein,
+    });
+    navigate("/calorie-counter");
   };
 
   const calculateBMR = (gender, weight, height, age) => {
     let bmr = 0;
-    if (gender === 'male') {
+    if (gender === "male") {
       bmr = 10 * weight + 6.25 * height - 5 * age + 5;
-    } else if (gender === 'female') {
+    } else if (gender === "female") {
       bmr = 10 * weight + 6.25 * height - 5 * age - 161;
     }
     return bmr;
   };
 
   const calculateTDEE = (bmr, exerciseMinutes, exerciseDays) => {
-    const activityMultiplier = getActivityMultiplier(exerciseMinutes, exerciseDays);
+    const activityMultiplier = getActivityMultiplier(
+      exerciseMinutes,
+      exerciseDays
+    );
     const tdee = bmr * activityMultiplier;
     return tdee;
+  };
+
+  const calculateProtein = (weight, exerciseMinutes, exerciseDays) => {
+    const weightInKg = weight * 0.45359237;
+    const activityMultiplier = getActivityMultiplier(
+      exerciseMinutes,
+      exerciseDays
+    );
+    let proteinPerKg = 0.8;
+    if (activityMultiplier > 1.2 && activityMultiplier < 1.55) {
+      proteinPerKg = 1.2;
+    }
+    if (activityMultiplier >= 1.55) {
+      proteinPerKg = 1.5;
+    }
+    const dailyProtein = weightInKg * proteinPerKg;
+    return Math.round(dailyProtein);
   };
 
   const getActivityMultiplier = (exerciseMinutes, exerciseDays) => {
@@ -69,8 +96,10 @@ const Questions = () => {
 
   return (
     <div className="questions-container">
-      <Nav className="questions-nav"/>
-      <h2 className="questions-title">Answer a few questions to get started:</h2>
+      <Nav className="questions-nav" />
+      <h2 className="questions-title">
+        Answer a few questions to get started:
+      </h2>
       <form className="questions-form" onSubmit={handleFormSubmit}>
         <label>
           Gender:
@@ -84,23 +113,39 @@ const Questions = () => {
         <label>
           Height:
           <div>
-            <input type="number" value={feet} onChange={(e) => setFeet(parseInt(e.target.value, 10))} />
+            <input
+              type="number"
+              value={feet}
+              onChange={(e) => setFeet(parseInt(e.target.value, 10))}
+            />
             feet
           </div>
           <div>
-            <input type="number" value={inches} onChange={(e) => setInches(parseInt(e.target.value, 10))} />
+            <input
+              type="number"
+              value={inches}
+              onChange={(e) => setInches(parseInt(e.target.value, 10))}
+            />
             inches
           </div>
         </label>
         <br />
         <label>
           Weight (in lbs):
-          <input type="number" value={weight} onChange={(e) => setWeight(parseInt(e.target.value, 10))} />
+          <input
+            type="number"
+            value={weight}
+            onChange={(e) => setWeight(parseInt(e.target.value, 10))}
+          />
         </label>
         <br />
         <label>
           Age:
-          <input type="number" value={age} onChange={(e) => setAge(parseInt(e.target.value, 10))} />
+          <input
+            type="number"
+            value={age}
+            onChange={(e) => setAge(parseInt(e.target.value, 10))}
+          />
         </label>
         <br />
         <label>
@@ -108,18 +153,40 @@ const Questions = () => {
           <div>
             <label>
               Minutes per day:
-              <input type="number" value={exerciseMinutes} onChange={(e) => setExerciseMinutes(parseInt(e.target.value, 10))} />
+              <input
+                type="number"
+                value={exerciseMinutes}
+                onChange={(e) =>
+                  setExerciseMinutes(parseInt(e.target.value, 10))
+                }
+              />
             </label>
           </div>
           <div>
             <label>
               Days per week:
-              <input type="number" value={exerciseDays} onChange={(e) => setExerciseDays(parseInt(e.target.value, 10))} />
+              <input
+                type="number"
+                value={exerciseDays}
+                onChange={(e) => setExerciseDays(parseInt(e.target.value, 10))}
+              />
             </label>
           </div>
         </label>
         <br />
-        <button className="questions-button" type="submit" disabled={!gender || !feet || !inches || !weight || !age || !exerciseMinutes || !exerciseDays}>
+        <button
+          className="questions-button"
+          type="submit"
+          disabled={
+            !gender ||
+            !feet ||
+            !inches ||
+            !weight ||
+            !age ||
+            !exerciseMinutes ||
+            !exerciseDays
+          }
+        >
           Start Tracking
         </button>
       </form>
