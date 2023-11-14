@@ -57,7 +57,7 @@ export const userReducer = (state, action) => {
     case "SET_DAILY_CARBS":
       return { ...state, dailyCarbs: action.payload };
     case "SET_CARBS_UPDATES":
-      return { ...state, carbUpdates: action.payload };
+      return { ...state, carbsUpdates: action.payload };
     default:
       return state;
   }
