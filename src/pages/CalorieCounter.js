@@ -13,7 +13,7 @@ const CalorieCounter = () => {
   const calorieChartRef = useRef(null);
   const proteinChartRef = useRef(null);
   const { userState, userDispatch } = useContext(UserContext);
-  const { tdee, uid, todayCalories, dailyProtein } = userState;
+  const { tdee, uid, todayCalories, protein, dailyProtein } = userState;
 
   useEffect(() => {
     // Fetch user data from Firestore
@@ -108,7 +108,7 @@ const CalorieCounter = () => {
       const proteinUpdatesLength = userState.proteinUpdates.length;
 
       const tdeeData = Array(calorieUpdatesLength).fill(tdee);
-      const proteinData = Array(proteinUpdatesLength).fill(dailyProtein);
+      const proteinData = Array(proteinUpdatesLength).fill(protein);
 
       console.log("Calorie Updates: ", userState.calorieUpdates);
       console.log("Protein Updates: ", userState.proteinUpdates);
@@ -190,6 +190,7 @@ const CalorieCounter = () => {
     tdee,
     userState.calorieUpdates,
     dailyProtein,
+    protein,
     userState.proteinUpdates,
   ]);
 
@@ -289,7 +290,7 @@ const CalorieCounter = () => {
       <h2 className="calorie-title">Your Daily Protein Intake</h2>
       <p className="calorie-description">
         Based on your information, you should consume approximately{" "}
-        {Math.round(dailyProtein)} of protein per day.
+        {Math.round(protein)} of protein per day.
       </p>
       <div className="calorie-chart">
         <canvas ref={proteinChartRef} />

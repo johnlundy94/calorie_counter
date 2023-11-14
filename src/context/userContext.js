@@ -46,6 +46,8 @@ export const userReducer = (state, action) => {
       return { ...state, todayCalories: action.payload };
     case "SET_CALORIE_UPDATES":
       return { ...state, calorieUpdates: action.payload };
+    case "SET_PROTEIN":
+      return { ...state, protein: action.payload };
     case "SET_DAILY_PROTEIN":
       return { ...state, dailyProtein: action.payload };
     case "SET_PROTEIN_UPDATES":

@@ -25,11 +25,7 @@ const Questions = () => {
 
     const bmr = calculateBMR(gender, weight, heightInCm, age);
     const tdee = calculateTDEE(bmr, exerciseMinutes, exerciseDays);
-    const dailyProtein = calculateProtein(
-      weight,
-      exerciseMinutes,
-      exerciseDays
-    );
+    const protein = calculateProtein(weight, exerciseMinutes, exerciseDays);
 
     userDispatch({ type: "SET_SEX", payload: gender });
     userDispatch({ type: "SET_HEIGHT", payload: heightInCm });
@@ -38,12 +34,12 @@ const Questions = () => {
     userDispatch({ type: "SET_GOAL", payload: exerciseDays });
     userDispatch({ type: "SET_AGE", payload: age });
     userDispatch({ type: "SET_TDEE", payload: tdee });
-    userDispatch({ type: "SET_DAILY_PROTEIN", payload: dailyProtein });
+    userDispatch({ type: "SET_PROTEIN", payload: protein });
 
     const userDoc = doc(db, "users", userState.uid);
     await updateDoc(userDoc, {
       tdee: tdee,
-      dailyProtein: dailyProtein,
+      protein: protein,
     });
     navigate("/calorie-counter");
   };
