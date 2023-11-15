@@ -27,6 +27,7 @@ const Questions = () => {
     const tdee = calculateTDEE(bmr, exerciseMinutes, exerciseDays);
     const protein = calculateProtein(weight, exerciseMinutes, exerciseDays);
     const carbs = calculateCarbs(tdee, exerciseMinutes, exerciseDays);
+    const fats = calculateFats(tdee, exerciseMinutes, exerciseDays);
 
     userDispatch({ type: "SET_SEX", payload: gender });
     userDispatch({ type: "SET_HEIGHT", payload: heightInCm });
@@ -37,12 +38,14 @@ const Questions = () => {
     userDispatch({ type: "SET_TDEE", payload: tdee });
     userDispatch({ type: "SET_PROTEIN", payload: protein });
     userDispatch({ type: "SET_CARBS", payload: carbs });
+    userDispatch({ type: "SET_FATS", payload: fats });
 
     const userDoc = doc(db, "users", userState.uid);
     await updateDoc(userDoc, {
       tdee: tdee,
       protein: protein,
       carbs: carbs,
+      fats: fats,
     });
     navigate("/calorie-counter");
   };
@@ -92,7 +95,7 @@ const Questions = () => {
 
     if (activityMultiplier >= 1.55) {
       percentageOfCarbs = 0.6;
-    } else if (activityMultiplier > 1 && activityMultiplier < 1.55) {
+    } else if (activityMultiplier > 1.2 && activityMultiplier < 1.55) {
       percentageOfCarbs = 0.55;
     } else {
       percentageOfCarbs = 0.45;
@@ -101,6 +104,22 @@ const Questions = () => {
     const caloriesFromCarbs = tdee * percentageOfCarbs;
     const dailyCarbs = caloriesFromCarbs / 4;
     return Math.round(dailyCarbs);
+  };
+
+  const calculateFats = (tdee, exerciseMinutes, exerciseDays) => {
+    const activityMultiplier = getActivityMultiplier(
+      exerciseMinutes,
+      exerciseDays
+    );
+    let percentageOfFats;
+
+    if (activityMultiplier >= 1.55) {
+      percentageOfFats = 0.35;
+    } else if (activityMultiplier > 1.2 && activityMultiplier < 1.55) {
+      percentageOfFats = 0.275;
+    } else {
+      percentageOfFats = 0.2;
+    }
   };
 
   const getActivityMultiplier = (exerciseMinutes, exerciseDays) => {
