@@ -13,9 +13,19 @@ const CalorieCounter = () => {
   const calorieChartRef = useRef(null);
   const proteinChartRef = useRef(null);
   const carbsChartRef = useRef(null);
+  const fatsChartRef = useRef(null);
   const { userState, userDispatch } = useContext(UserContext);
-  const { tdee, uid, todayCalories, protein, dailyProtein, carbs, dailyCarbs } =
-    userState;
+  const {
+    tdee,
+    uid,
+    todayCalories,
+    protein,
+    dailyProtein,
+    carbs,
+    dailyCarbs,
+    fats,
+    dailyFats,
+  } = userState;
 
   useEffect(() => {
     // Fetch user data from Firestore
@@ -49,6 +59,14 @@ const CalorieCounter = () => {
             type: "SET_CARBS_UPDATES",
             payload: userData.carbsUpdates || [],
           });
+          userDispatch({
+            type: "SET_DAILY_FATS",
+            payload: userData.dailyFats || 0,
+          });
+          userDispatch({
+            type: "SET_FATS_UPDATES",
+            payload: userData.fatsUpdates || [],
+          });
         }
       }
     };
@@ -63,6 +81,7 @@ const CalorieCounter = () => {
       userDispatch({ type: "SET_TODAY_CALORIES", payload: 0 });
       userDispatch({ type: "SET_DAILY_PROTEIN", payload: 0 });
       userDispatch({ type: "SET_DAILY_CARBS", payload: 0 });
+      userDispatch({ type: "SET_DAILY_FATS", payload: 0 });
       // Also update this data in your Firestore database if needed
     };
 
@@ -116,19 +135,25 @@ const CalorieCounter = () => {
       userState.proteinUpdates &&
       carbsChartRef &&
       carbsChartRef.current &&
-      userState.carbsUpdates
+      userState.carbsUpdates &&
+      fatsChartRef &&
+      fatsChartRef.current &&
+      userState.fatsUpdates
     ) {
       const calorieUpdatesLength = userState.calorieUpdates.length;
       const proteinUpdatesLength = userState.proteinUpdates.length;
       const carbsUpdatesLength = userState.carbsUpdates.length;
+      const fatsUpdatesLength = userState.fatsUpdates.length;
 
       const tdeeData = Array(calorieUpdatesLength).fill(tdee);
       const proteinData = Array(proteinUpdatesLength).fill(protein);
       const carbsData = Array(carbsUpdatesLength).fill(carbs);
+      const fatsData = Array(fatsUpdatesLength).fill(fats);
 
       console.log("Calorie Updates: ", userState.calorieUpdates);
       console.log("Protein Updates: ", userState.proteinUpdates);
       console.log("Carbs Updates: ", userState.carbsUpdates);
+      console.log("Fats Updates:", userState.fatsUpdattes);
       userState.calorieUpdates.forEach((update) => {
         console.log("Update Time: ", update.time); // <-- Log the time here
       });
@@ -227,10 +252,41 @@ const CalorieCounter = () => {
         },
       });
 
+      const fatsChartInstance = new Chart(fatsChartRef.current, {
+        type: "line",
+        data: {
+          labels: userState.fatsUpdates
+            ? userState.fatsUpdates.map((update) => formatTime(update.time))
+            : [],
+          datasets: [
+            {
+              label: "Fats",
+              data: fatsData,
+              borderColor: "rgba(255, 0, 0, 1)",
+            },
+            {
+              label: "Today's Fats",
+              data: userState.fatsUpdates
+                ? userState.fatsUpdates.map((update) => update.cumulativeFats)
+                : [],
+              borderColor: "rgba(0, 0, 255, 1)",
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+
       return () => {
         calorieChartInstance.destroy();
         proteinChartInstance.destroy();
         carbsChartInstance.destroy();
+        fatsChartInstance.destroy();
       };
     }
   }, [
@@ -243,6 +299,9 @@ const CalorieCounter = () => {
     dailyCarbs,
     carbs,
     userState.carbsUpdates,
+    dailyFats,
+    fats,
+    userState.fatsUpdates,
   ]);
 
   const handleCalorieSubmit = async (e) => {
@@ -350,6 +409,41 @@ const CalorieCounter = () => {
     userDispatch({ type: "SET_CARBS_UPDATES", payload: newCarbsUpdates });
   };
 
+  const handleFatsSubmit = async (e) => {
+    e.preventDefault();
+    const newFats = parseInt(e.target.userFats.value, 10);
+
+    console.log("newFats values", newFats);
+    if (isNaN(newFats)) {
+      alert("Please enter a valid number");
+      return;
+    }
+
+    const updatedFats = userState.dailyFats + newFats;
+
+    const now = new Date();
+    const currentTime = formatTime(now);
+
+    const newFatsUpdates = [
+      ...userState.fatsUpdates,
+      { time: currentTime, cumulativeFats: updatedFats },
+    ];
+
+    // Update Firestore and local state
+    const docRef = doc(db, "users", uid);
+    await setDoc(
+      docRef,
+      {
+        dailyFats: updatedFats,
+        fatsUpdates: newFatsUpdates,
+      },
+      { merge: true }
+    );
+
+    userDispatch({ type: "SET_DAILY_FATS", payload: updatedFats });
+    userDispatch({ type: "SET_FATS_UPDATES", payload: newFatsUpdates });
+  };
+
   return (
     <div className="calorie-counter">
       <Nav />
@@ -410,6 +504,26 @@ const CalorieCounter = () => {
         />
         <button className="calorie-button" type="submit">
           Update Protein
+        </button>
+      </form>
+
+      <h2 className="calorie-title">Your Daily Fats Intake</h2>
+      <p className="calorie-description">
+        Based on your information, you should consume approximately{" "}
+        {Math.round(fats)} fats per day.
+      </p>
+      <div className="calorie-chart">
+        <canvas ref={fatsChartRef} />
+      </div>
+      <form className="calorie-form" onSubmit={handleFatsSubmit}>
+        <input
+          className="calorie-input"
+          name="userFats"
+          type="number"
+          placeholder="Enter fats"
+        />
+        <button className="calorie-button" type="submit">
+          Update Fats
         </button>
       </form>
     </div>
