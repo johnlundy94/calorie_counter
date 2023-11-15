@@ -126,6 +126,19 @@ const Questions = () => {
     return Math.round(fats);
   };
 
+  const calculateFiber = (gender, tdee) => {
+    const fiberPerThousandCalories = 14;
+    let fiber;
+
+    if (gender === "male") {
+      fiber = Math.min(38, (tdee / 1000) * fiberPerThousandCalories);
+    } else {
+      fiber = Math.min(25, (tdee / 1000) * fiberPerThousandCalories);
+    }
+
+    return Math.round(fiber);
+  };
+
   const getActivityMultiplier = (exerciseMinutes, exerciseDays) => {
     if (exerciseMinutes >= 150 && exerciseDays >= 3) {
       return 1.55; // Moderate exercise/sports 3-5 days/week
