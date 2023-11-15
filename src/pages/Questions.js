@@ -120,6 +120,10 @@ const Questions = () => {
     } else {
       percentageOfFats = 0.2;
     }
+
+    const caloriesFromFats = tdee * percentageOfFats;
+    const fats = caloriesFromFats / 9;
+    return Math.round(fats);
   };
 
   const getActivityMultiplier = (exerciseMinutes, exerciseDays) => {
