@@ -64,6 +64,12 @@ export const userReducer = (state, action) => {
       return { ...state, dailyFats: action.payload };
     case "SET_FATS_UPDATES":
       return { ...state, fatsUpdates: action.payload };
+    case "SET_FIBER":
+      return { ...state, fiber: action.payload };
+    case "SET_DAILY_FIBER":
+      return { ...state, dailyFiber: action.payload };
+    case "SET_FIBER_UPDATES":
+      return { ...state, fiberUpdates: action.payload };
     default:
       return state;
   }
