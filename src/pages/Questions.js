@@ -28,6 +28,7 @@ const Questions = () => {
     const protein = calculateProtein(weight, exerciseMinutes, exerciseDays);
     const carbs = calculateCarbs(tdee, exerciseMinutes, exerciseDays);
     const fats = calculateFats(tdee, exerciseMinutes, exerciseDays);
+    const fiber = calculateFiber(gender, tdee);
 
     userDispatch({ type: "SET_SEX", payload: gender });
     userDispatch({ type: "SET_HEIGHT", payload: heightInCm });
@@ -39,6 +40,7 @@ const Questions = () => {
     userDispatch({ type: "SET_PROTEIN", payload: protein });
     userDispatch({ type: "SET_CARBS", payload: carbs });
     userDispatch({ type: "SET_FATS", payload: fats });
+    userDispatch({ type: "SET_FIBER", payload: fiber });
 
     const userDoc = doc(db, "users", userState.uid);
     await updateDoc(userDoc, {
@@ -46,6 +48,7 @@ const Questions = () => {
       protein: protein,
       carbs: carbs,
       fats: fats,
+      fiber: fiber,
     });
     navigate("/calorie-counter");
   };
