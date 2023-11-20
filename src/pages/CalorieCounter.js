@@ -14,6 +14,7 @@ const CalorieCounter = () => {
   const proteinChartRef = useRef(null);
   const carbsChartRef = useRef(null);
   const fatsChartRef = useRef(null);
+  const fiberChartRef = useRef(null);
   const { userState, userDispatch } = useContext(UserContext);
   const {
     tdee,
@@ -25,6 +26,8 @@ const CalorieCounter = () => {
     dailyCarbs,
     fats,
     dailyFats,
+    fiber,
+    dailyFiber,
   } = userState;
 
   useEffect(() => {
@@ -67,6 +70,14 @@ const CalorieCounter = () => {
             type: "SET_FATS_UPDATES",
             payload: userData.fatsUpdates || [],
           });
+          userDispatch({
+            type: "SET_DAILY_FIBER",
+            payload: userData.dailyFiber || 0,
+          });
+          userDispatch({
+            type: "SET_FIBER_UPDATES",
+            payload: userData.fiberUpdates || [],
+          });
         }
       }
     };
@@ -82,6 +93,7 @@ const CalorieCounter = () => {
       userDispatch({ type: "SET_DAILY_PROTEIN", payload: 0 });
       userDispatch({ type: "SET_DAILY_CARBS", payload: 0 });
       userDispatch({ type: "SET_DAILY_FATS", payload: 0 });
+      userDispatch({ type: "SET_DAILY_FIBER", payload: 0 });
       // Also update this data in your Firestore database if needed
     };
 
@@ -138,22 +150,28 @@ const CalorieCounter = () => {
       userState.carbsUpdates &&
       fatsChartRef &&
       fatsChartRef.current &&
-      userState.fatsUpdates
+      userState.fatsUpdates &&
+      fiberChartRef &&
+      fiberChartRef.current &&
+      userState.fiberUpdates
     ) {
       const calorieUpdatesLength = userState.calorieUpdates.length;
       const proteinUpdatesLength = userState.proteinUpdates.length;
       const carbsUpdatesLength = userState.carbsUpdates.length;
       const fatsUpdatesLength = userState.fatsUpdates.length;
+      const fiberUpdatesLength = userState.fiberUpdates.length;
 
       const tdeeData = Array(calorieUpdatesLength).fill(tdee);
       const proteinData = Array(proteinUpdatesLength).fill(protein);
       const carbsData = Array(carbsUpdatesLength).fill(carbs);
       const fatsData = Array(fatsUpdatesLength).fill(fats);
+      const fiberData = Array(fiberUpdatesLength).fill(fiber);
 
       console.log("Calorie Updates: ", userState.calorieUpdates);
       console.log("Protein Updates: ", userState.proteinUpdates);
       console.log("Carbs Updates: ", userState.carbsUpdates);
       console.log("Fats Updates:", userState.fatsUpdattes);
+      console.log("Fiber Updates:", userState.fiberUpdattes);
       userState.calorieUpdates.forEach((update) => {
         console.log("Update Time: ", update.time); // <-- Log the time here
       });
@@ -282,11 +300,42 @@ const CalorieCounter = () => {
         },
       });
 
+      const fiberChartInstance = new Chart(fiberChartRef.current, {
+        type: "line",
+        data: {
+          labels: userState.fiberUpdates
+            ? userState.fiberUpdates.map((update) => formatTime(update.time))
+            : [],
+          datasets: [
+            {
+              label: "Fiber",
+              data: fiberData,
+              borderColor: "rgba(255, 0, 0, 1)",
+            },
+            {
+              label: "Today's Fiber",
+              data: userState.fiberUpdates
+                ? userState.fiberUpdates.map((update) => update.cumulativeFiber)
+                : [],
+              borderColor: "rgba(0, 0, 255, 1)",
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+
       return () => {
         calorieChartInstance.destroy();
         proteinChartInstance.destroy();
         carbsChartInstance.destroy();
         fatsChartInstance.destroy();
+        fiberChartInstance.destroy();
       };
     }
   }, [
@@ -302,6 +351,9 @@ const CalorieCounter = () => {
     dailyFats,
     fats,
     userState.fatsUpdates,
+    dailyFiber,
+    fiber,
+    userState.fiberUpdates,
   ]);
 
   const handleCalorieSubmit = async (e) => {
@@ -444,6 +496,41 @@ const CalorieCounter = () => {
     userDispatch({ type: "SET_FATS_UPDATES", payload: newFatsUpdates });
   };
 
+  const handleFiberSubmit = async (e) => {
+    e.preventDefault();
+    const newFiber = parseInt(e.target.userFiber.value, 10);
+
+    console.log("newFiber values", newFiber);
+    if (isNaN(newFiber)) {
+      alert("Please enter a valid number");
+      return;
+    }
+
+    const updatedFiber = userState.dailyFiber + newFiber;
+
+    const now = new Date();
+    const currentTime = formatTime(now);
+
+    const newFiberUpdates = [
+      ...userState.fiberUpdates,
+      { time: currentTime, cumulativeFiber: updatedFiber },
+    ];
+
+    // Update Firestore and local state
+    const docRef = doc(db, "users", uid);
+    await setDoc(
+      docRef,
+      {
+        dailyFiber: updatedFiber,
+        fiberUpdates: newFiberUpdates,
+      },
+      { merge: true }
+    );
+
+    userDispatch({ type: "SET_DAILY_FIBER", payload: updatedFiber });
+    userDispatch({ type: "SET_FIBER_UPDATES", payload: newFiberUpdates });
+  };
+
   return (
     <div className="calorie-counter">
       <Nav />
@@ -524,6 +611,27 @@ const CalorieCounter = () => {
         />
         <button className="calorie-button" type="submit">
           Update Fats
+        </button>
+      </form>
+
+      <h2 className="calorie-title">Your Daily Fiber Intake</h2>
+      <p className="calorie-description">
+        Based on your information, you should consume approximately{" "}
+        {Math.round(fiber)} fiber per day.
+      </p>
+      <div className="calorie-chart">
+        <canvas ref={fiberChartRef} />
+      </div>
+      <form className="calorie-form" onSubmit={handleFiberSubmit}>
+        <input
+          className="calorie-input"
+          name="userFiber"
+          s
+          type="number"
+          placeholder="Enter fiber"
+        />
+        <button className="calorie-button" type="submit">
+          Update Fiber
         </button>
       </form>
     </div>
