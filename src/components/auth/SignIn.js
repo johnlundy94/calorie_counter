@@ -10,8 +10,24 @@ const { db } = firebaseConfig;
 
 const SignIn = () => {
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
   const navigate = useNavigate();
   const { userDispatch } = useContext(UserContext);
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return emailRegex.test(email);
+  };
+
+  handleEmailChange = (e) => {
+    const email = e.target.value;
+    if (!validateEmail(email) && email) {
+      setEmailError("Invalid email format");
+    } else {
+      setEmailError("");
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

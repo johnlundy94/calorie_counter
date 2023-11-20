@@ -557,7 +557,7 @@ const CalorieCounter = () => {
       <h2 className="calorie-title">Your Daily Protein Intake</h2>
       <p className="calorie-description">
         Based on your information, you should consume approximately{" "}
-        {Math.round(protein)} of protein per day.
+        {Math.round(protein)} grams of protein per day.
       </p>
       <div className="calorie-chart">
         <canvas ref={proteinChartRef} />
@@ -577,7 +577,7 @@ const CalorieCounter = () => {
       <h2 className="calorie-title">Your Daily Carbohydate Intake</h2>
       <p className="calorie-description">
         Based on your information, you should consume approximately{" "}
-        {Math.round(carbs)} carbohydrates per day.
+        {Math.round(carbs)} grams of carbohydrates per day.
       </p>
       <div className="calorie-chart">
         <canvas ref={carbsChartRef} />
@@ -597,7 +597,7 @@ const CalorieCounter = () => {
       <h2 className="calorie-title">Your Daily Fats Intake</h2>
       <p className="calorie-description">
         Based on your information, you should consume approximately{" "}
-        {Math.round(fats)} fats per day.
+        {Math.round(fats)} grams of fat per day.
       </p>
       <div className="calorie-chart">
         <canvas ref={fatsChartRef} />
@@ -617,7 +617,7 @@ const CalorieCounter = () => {
       <h2 className="calorie-title">Your Daily Fiber Intake</h2>
       <p className="calorie-description">
         Based on your information, you should consume approximately{" "}
-        {Math.round(fiber)} fiber per day.
+        {Math.round(fiber)} grams of fiber per day.
       </p>
       <div className="calorie-chart">
         <canvas ref={fiberChartRef} />
