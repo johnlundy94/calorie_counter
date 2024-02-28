@@ -2,7 +2,7 @@
 
 ## Description
 
-Calorie Counter is a streamlined and effective calorie counting application designed to empower users in reaching their dietary goals. With an easy-to-use authentication system, the app provides personalized calorie intake metrics based on a questionnaire filled out during the signup process. The app leverages Firebase for both authentication and real-time data storage, allowing users to track their caloric intake throughout the day seamlessly.
+Calorie Counter is a streamlined and effective nutrient counting application designed to empower users in reaching their dietary goals. With an easy-to-use authentication system, the app provides personalized nutrient intake metrics based on a questionnaire filled out during the signup process. The app leverages Firebase for both authentication and real-time data storage, allowing users to track their caloric intake throughout the day seamlessly.
 
 ## Installation
 
@@ -39,3 +39,8 @@ We have plans to expand Calorie Counter into a full-fledged dietary application 
 - **Diverse Dietary Plans**: Customizable plans to cater to various dietary restrictions and preferences.
 
 Feel free to contribute or suggest any features you'd like to see implemented.
+
+## Links
+
+- [Website](https://www.johnscaloriecounter.com/)
+- [GitHub Repo](https://github.com/johnlundy94/calorie_counter)
