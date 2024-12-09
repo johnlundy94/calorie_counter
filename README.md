@@ -43,4 +43,3 @@ Feel free to contribute or suggest any features you'd like to see implemented.
 ## Links
 
 - [Website](https://www.johnscaloriecounter.com/)
-- [GitHub Repo](https://github.com/johnlundy94/calorie_counter)
